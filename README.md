@@ -1,5 +1,3 @@
-The project implements an Intelligent Intrusion Detection and Monitoring System that provides real-time assessment of system health, anomaly detection, and alert notifications. Built using Python, Flask, and JWT-based authentication, the system offers secure access to critical system metrics and alerts on a user-friendly dashboard. Designed with multi-threaded agents, it operates autonomously to monitor, evaluate, and respond to potential security threats.
-
 Key Features:
 1. System Monitoring Agents:
   SystemSentinelAgent: Collects CPU and memory usage data using psutil, identifies anomalies through predefined thresholds in the AnomalyDetectionModel, and logs them. When threats are detected, it generates a digital signature for alert authenticity and dispatches alerts via email.
