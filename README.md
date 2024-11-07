@@ -32,18 +32,23 @@ How to Run This:
 4. Run ids_system.py in command prompt
 
 Main Page:
+
 <img width="1105" alt="Main Page" src="https://github.com/user-attachments/assets/8e7036fd-a5ec-4ab6-8526-2a8b414e38eb">
 
 Token:
+
 <img width="500" alt="Token" src="https://github.com/user-attachments/assets/619ff334-fa64-491b-b60b-1f759c963fab">
 
 Digital Signature:
+
 <img width="615" alt="Digital" src="https://github.com/user-attachments/assets/0e86401e-1629-4672-a3e6-c662388da2ce">
 
 Backend:
+
 <img width="560" alt="Backend" src="https://github.com/user-attachments/assets/fad17512-aaf7-44e6-8b33-f6e3863b4fee">
 
 Login Page:
+
 <img width="343" alt="Login" src="https://github.com/user-attachments/assets/435d8c14-ee91-4920-bcfa-3b888e8198cf">
 
 
