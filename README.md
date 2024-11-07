@@ -31,3 +31,5 @@ How to Run This:
 3. Update the Secret Key: Modify the SECRET_KEY value in the code for secure JWT token handling.
 4. Run ids_system.py in command prompt
 
+<img width="1105" alt="Main Page" src="https://github.com/user-attachments/assets/8e7036fd-a5ec-4ab6-8526-2a8b414e38eb">
+
