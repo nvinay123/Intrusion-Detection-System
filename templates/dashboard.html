@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Metrics Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let token = null;
+
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Login failed");
+                return response.json();
+            })
+            .then(data => {
+                token = data.token;
+                document.getElementById("login-form").style.display = "none";
+                document.getElementById("dashboard").style.display = "block";
+                startPolling();
+            })
+            .catch(error => { alert(error.message); });
+        }
+
+        function fetchMetrics() {
+            if (!token) return;
+            fetch("/metrics", {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(response => response.json())
+            .then(data => { updateDashboard(data); })
+            .catch(error => { console.error("Error fetching metrics:", error); });
+        }
+
+        function updateDashboard(data) {
+            document.getElementById("cpu").innerText = `CPU Usage: ${data.cpu}%`;
+            document.getElementById("memory").innerText = `Memory Usage: ${data.memory}%`;
+            document.getElementById("anomaly").innerText = `Anomaly: ${data.anomaly || "None"}`;
+
+            updateChart(cpuChart, data.cpu);
+            updateChart(memoryChart, data.memory);
+        }
+
+        function startPolling() {
+            fetchMetrics();
+            setInterval(fetchMetrics, 5000);
+        }
+
+        let cpuChart, memoryChart;
+
+        function initializeCharts() {
+            const cpuCtx = document.getElementById("cpuChart").getContext("2d");
+            const memoryCtx = document.getElementById("memoryChart").getContext("2d");
+
+            cpuChart = new Chart(cpuCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'CPU Usage (%)',
+                        data: [],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            memoryChart = new Chart(memoryCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Memory Usage (%)',
+                        data: [],
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function updateChart(chart, value) {
+            const maxDataPoints = 20;
+            chart.data.labels.push('');
+            chart.data.datasets[0].data.push(value);
+
+            if (chart.data.datasets[0].data.length > maxDataPoints) {
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+            }
+            chart.update();
+        }
+
+        window.onload = function() { initializeCharts(); };
+    </script>
+</head>
+<body>
+    <div id="login-form" style="display: block;">
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="dashboard" style="display: none;">
+        <div class="container">
+            <h1>System Metrics Dashboard</h1>
+            <p id="anomaly">Anomaly: None</p>
+
+            <div class="chart-container">
+                <h2>Real-Time CPU Usage</h2>
+                <canvas id="cpuChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>Real-Time Memory Usage</h2>
+                <canvas id="memoryChart"></canvas>
+            </div>
+
+            <div class="metrics-display">
+                <p id="cpu">CPU Usage: N/A</p>
+                <p id="memory">Memory Usage: N/A</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
